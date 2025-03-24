@@ -14,8 +14,8 @@ from schemas.schemas import PasswordReset
 
 forgot_router = APIRouter(tags=["forgot password"], prefix="/api/password_reset")
 
-sender = "harut.karapetyan.2022@gmail.com"
-password = "dzok bydv rbqw lsab"
+sender = "adaptiveproject2025@gmail.com"
+password = "whvu qagh hnug ukuz"
 
 
 @forgot_router.post("/request/{email}")

@@ -1,13 +1,11 @@
-# FastAPI
-from fastapi import FastAPI, status, Depends,HTTPException
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, status, Depends, HTTPException
+from fastapi.responses import JSONResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 from starlette.status import HTTP_401_UNAUTHORIZED
 from starlette.requests import Request
-from starlette.responses import Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
 import base64
@@ -16,21 +14,18 @@ import base64
 from database import engine, check_connection
 from models.models import Base
 
-
 # Define HTTPBasic security scheme
 security = HTTPBasic()
-
 
 # Routers
 from api.auth.auth import auth_router
 from api.auth.forgot_password import forgot_router
-
+from api.endpoints.admin import admin_router
 
 Base.metadata.create_all(bind=engine)
 check_connection()
 
 app = FastAPI(title="Adaptive Users")
-
 
 # Simple user authentication for example purposes
 def get_current_user(credentials: HTTPBasicCredentials = Depends(security)):
@@ -43,7 +38,6 @@ def get_current_user(credentials: HTTPBasicCredentials = Depends(security)):
             headers={"WWW-Authenticate": "Basic"},
         )
     return credentials.username
-
 
 # Middleware to enforce authentication on docs and redoc
 class DocsAuthMiddleware(BaseHTTPMiddleware):
@@ -72,41 +66,32 @@ class DocsAuthMiddleware(BaseHTTPMiddleware):
         return response
 
 # CORS
-origins = ["*"]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_credentials=True,
 )
 
 app.add_middleware(
     DocsAuthMiddleware,
-    auth_func=get_current_user,
+    auth_func=lambda credentials: get_current_user(credentials),
 )
-
 
 @app.get("/")
 def main():
     return JSONResponse(status_code=status.HTTP_200_OK, content={"message": "OK"})
 
 # Protect the docs endpoints
-@app.get("/docs", include_in_schema=False)
+@app.get("/docs")
 async def get_docs():
     return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
 
-
-@app.get("/redoc", include_in_schema=False)
+@app.get("/redoc")
 async def get_redoc():
     return get_redoc_html(openapi_url="/openapi.json", title="redoc")
 
-
-@app.get("/openapi.json", include_in_schema=False)
-async def get_openapi():
-    return app.openapi()
-
-
 app.include_router(auth_router)
 app.include_router(forgot_router)
+app.include_router(admin_router)

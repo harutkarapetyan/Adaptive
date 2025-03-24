@@ -12,18 +12,18 @@ def mail_body(email):
     URL = f"{SERVER_ADDRESS}/api/auth/mail_verification"
 
     return f"""Dear user,
-            Thank you for creating your account.
-            Please confirm your email address. The confirmation code is:
+               Thank you for creating your account.
+               Please confirm your email address. The confirmation code is:
             \n
             {URL}/{email}
             \n
-            If you have not requested a verification code, you can safely ignore this email․
+              If you have not requested a verification code, you can safely ignore this email․
     """
 
 
 subject = "Confirm Registration"
-sender = "harut.karapetyan.2022@gmail.com"
-password = "dzok bydv rbqw lsab"
+sender = "adaptiveproject2025@gmail.com"
+password = "whvu qagh hnug ukuz"
 
 
 def mail_verification_email(email):
