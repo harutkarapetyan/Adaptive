@@ -16,7 +16,9 @@ from api.auth.forgot_password import forgot_router
 Base.metadata.create_all(bind=engine)
 check_connection()
 
-app = FastAPI()
+app = FastAPI(
+title="Adaptive"
+)
 
 # CORS
 origins = ["*"]

@@ -6,16 +6,16 @@ config.read("./core/config.ini")
 
 SERVER_ADDRESS = config["DEFAULT"]["SERVER_ADDRESS"]
 
-
 def mail_body(email):
 
-    URL = f"{SERVER_ADDRESS}/api/auth/mail_verification"
+    # URL = f"{SERVER_ADDRESS}/api/auth/mail_verification"
+    verification_url = f"{SERVER_ADDRESS}/api/auth/mail_verification?email={email}"
 
     return f"""Dear user,
                Thank you for creating your account.
-               Please confirm your email address. The confirmation code is:
+               Please confirm your email address. The confirmation address is as follows:
             \n
-            {URL}/{email}
+            {verification_url}
             \n
               If you have not requested a verification code, you can safely ignore this email․
     """

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status, Depends, Form
+from fastapi import APIRouter, HTTPException, status, Depends, Form, Query
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from models.models import User
@@ -22,8 +22,8 @@ def is_valid_password(password: str) -> bool:
     return re.match(regex, password) is not None
 
 
-@auth_router.get("/mail_verification/{email}")
-def verify_email(email: str, db: Session = Depends(get_db)):
+@auth_router.get("/mail_verification", name='mail_verification')
+def verify_email(email: str = Query(), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == email).first()
 
     if user is None:
@@ -35,7 +35,9 @@ def verify_email(email: str, db: Session = Depends(get_db)):
     db.refresh(user)
 
     return JSONResponse(status_code=status.HTTP_200_OK,
-                        content={"message": "You have successfully passed the verification"},
+                        content={"message": "You have successfully passed the verification",
+                                 "redirect_url": "https://app.nginnovators.am/api/auth/login"
+                                 },
                         headers=headers)
 
 

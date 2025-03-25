@@ -20,5 +20,5 @@ class ResetPassword(Base):
     __tablename__ = "password_reset"
 
     password_reset_id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.user_id"))
+    user_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False, index=True)
     code = Column(Integer, nullable=False, unique=True)

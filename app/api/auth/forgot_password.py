@@ -37,12 +37,11 @@ def forgot_password(email: str, db: Session = Depends(get_db)):
 
         subject = "Password Reset E-mail"
 
-        body = f"""You received this email because
-                    you or someone else has requested a password reset for your user account at.
-
+        body = f""" You received this email because you or someone else has requested a password reset for your user account at.
+        
                     YOUR CODE
                     {code}
-
+                    
                     If you did not request a password reset you can safely ignore this email
                   """
         send_email(subject, body, sender, email, password)
