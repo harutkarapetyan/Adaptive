@@ -13,6 +13,7 @@ class User(Base):
     password = Column(String, nullable=False)
     phone_number = Column(String, nullable=False)
     status = Column(Boolean, nullable=True, server_default="False")
+    role = Column(String, nullable=True, default="user")  # New column for user role
     created_at = Column(TIMESTAMP, nullable=False, server_default=text("now()"))
 
 
