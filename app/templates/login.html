@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptive - Sign In</title>
+  <style>
+    /* Глобальные стили (совместимость с первой страницей) */
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 0;
+    }
+
+    .login-section .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Шапка (как на главной) */
+    header {
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 20px 0;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+    /* Основной контент страницы входа */
+    .login-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 80vh;
+      padding: 40px 0;
+    }
+
+    .login-card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+      padding: 40px;
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+    }
+
+    .login-card h2 {
+      color: var(--secondary);
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: border 0.3s;
+    }
+
+    .form-group input:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+    }
+
+    .remember-me input {
+      margin-right: 8px;
+    }
+
+    .forgot-password {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .forgot-password:hover {
+      text-decoration: underline;
+    }
+
+    .login-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s;
+    }
+
+    .login-btn:hover {
+      background-color: var(--secondary);
+      transform: translateY(-2px);
+    }
+
+    /* Футер */
+    footer {
+      background-color: var(--dark);
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 40px;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 30px 20px;
+      }
+
+      .options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- Шапка -->
+<header>
+    <div class="container">
+        <nav>
+            <a href="/" class="logo">Adaptive</a>
+        </nav>
+    </div>
+</header>
+
+<!-- Основной контент -->
+<main>
+  <section class="login-section">
+    <div class="container">
+      <div class="login-card">
+        <h2>Մուտք գործել</h2>
+        <form>
+  <div id="error-message" style="color: red; margin-bottom: 15px;"></div> <!-- Ահա սխալի հատվածը -->
+
+  <div class="form-group">
+    <label for="email">Մուտքագրեք ձեր էլ․ հասցեն</label>
+    <input type="email" id="email" required>
+  </div>
+  <div class="form-group">
+    <label for="password">Մուտքագրեք ձեր գաղտնաբառը</label>
+    <input type="password" id="password" required>
+  </div>
+  <div class="options">
+    <div class="remember-me">
+      <input type="checkbox" id="remember">
+      <label for="remember">Հիշել ինձ</label>
+    </div>
+    <a href="/forgot" class="forgot-password">Մոռացե՞լ եք գաղտնաբառը</a>
+  </div>
+  <button type="submit" class="login-btn">Մուտք գործել</button>
+</form>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Футер -->
+<footer>
+  <div class="container">
+    <p>© 2025 Adaptive. Բոլոր իրավունքները պաշտպանված են։</p>
+  </div>
+</footer>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const errorMessage = document.getElementById('error-message'); // Ավելացրել ենք
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault(); // Չթողնել reload
+
+        // Մաքրել հին սխալները
+        errorMessage.textContent = '';
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        try {
+            const response = await fetch('api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                errorMessage.textContent = errorData.detail || "Մուտքը ձախողվեց։";
+                return;
+            }
+
+            const data = await response.json();
+            console.log("Մուտքը հաջող է", data);
+
+            // Եթե պետք է պահել token՝
+            // localStorage.setItem('access_token', data.access_token);
+
+            // Երթ դեպի օգտագործողի ինտերֆեյս
+            window.location.href = '/user-interface';
+        } catch (error) {
+            console.error('Խնդիր է:', error);
+            errorMessage.textContent = "Անսպասելի սխալ։ Խնդրում ենք կրկին փորձել։";
+        }
+    });
+});
+</script>
+
+</body>
+</html>

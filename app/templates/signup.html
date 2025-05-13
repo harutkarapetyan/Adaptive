@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaptive - Registration</title>
+    <style>
+        /* Глобальные стили (как на предыдущих страницах) */
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --error: #e63946;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .registration-section .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Шапка */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Основной контент */
+        .registration-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            padding: 40px 0;
+        }
+
+        .registration-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .registration-card h2 {
+            color: var(--secondary);
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .form-error {
+            color: var(--error);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .register-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 10px;
+            grid-column: span 2;
+        }
+
+        .register-btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            grid-column: span 2;
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Футер */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .register-btn,
+            .login-link {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Шапка -->
+<header>
+    <div class="container">
+        <nav>
+            <a href="/" class="logo">Adaptive</a>
+        </nav>
+    </div>
+</header>
+
+<!-- Основной контент -->
+<main>
+    <section class="registration-section">
+        <div class="container">
+            <div class="registration-card">
+                <h2>Գրանցում</h2>
+                <form id="registrationForm">
+                    <div id="server-message" style="margin-bottom: 15px; font-weight: bold; text-align: center;"></div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fullName">Ամբողջական անուն</label>
+                            <input type="text" id="fullName" required>
+                            <div class="form-error" id="fullNameError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Օգտագործողի անուն</label>
+                            <input type="text" id="username" required>
+                            <div class="form-error" id="usernameError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Էլ. հասցե</label>
+                            <input type="email" id="email" required>
+                            <div class="form-error" id="emailError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Հեռախոսահամար</label>
+                            <input type="tel" id="phone" placeholder="+37499123456">
+                            <div class="form-error" id="phoneError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Գաղտնաբառ</label>
+                            <input type="password" id="password" required>
+                            <div class="form-error" id="passwordError"></div>
+                            <div class="form-hint" id="passwordHint" style="font-size: 12px; color: var(--gray); margin-top: 5px;">
+                            Օրինակ՝ abc/%$#@+ (Առնվազն 9 նիշ)
+                            </div>
+                         </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Հաստատել գաղտնաբառը</label>
+                            <input type="password" id="confirmPassword" required>
+                            <div class="form-error" id="confirmPasswordError"></div>
+                        </div>
+                    </div>
+                    <button type="submit" class="register-btn">Գրանցվել</button>
+                    <div class="login-link">
+                        Արդեն ունե՞ք հաշիվ։ <a href="/login">Մուտք գործել</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Футер -->
+<footer>
+    <div class="container">
+        <p>© 2025 Adaptive. Բոլոր իրավունքները պաշտպանված են։</p>
+    </div>
+</footer>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get('token');
+
+document.getElementById('registrationForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const serverMessage = document.getElementById('server-message');
+    serverMessage.textContent = '';
+    serverMessage.style.color = '';
+
+    // Հեռախոսի ստուգում
+    const phoneInput = document.getElementById('phone');
+    const phoneError = document.getElementById('phoneError');
+    const phoneValue = phoneInput.value.trim();
+
+    phoneError.style.display = 'none';
+    phoneError.textContent = '';
+
+    const phoneRegex = /^(\+|0)\d{7,15}$/;
+    if (phoneValue && !phoneRegex.test(phoneValue)) {
+        phoneError.textContent = "Խնդրում ենք մուտքագրել ճիշտ հեռախոսահամար։ Օրինակ՝ +37499123456 կամ 099123456։";
+        phoneError.style.display = 'block';
+        return;
+    }
+
+    // Գաղտնաբառի ստուգում
+    const passwordInput = document.getElementById('password');
+    const passwordError = document.getElementById('passwordError');
+    const passwordValue = passwordInput.value.trim();
+
+    passwordError.style.display = 'none';
+    passwordError.textContent = '';
+
+    if (passwordValue.length < 9) {
+        passwordError.textContent = "Գաղտնաբառը պետք է պարունակի առնվազն 9 նիշ։";
+        passwordError.style.display = 'block';
+        return;
+    }
+
+    // Բոլոր տվյալները
+    const userData = {
+        first_name: document.getElementById('fullName').value,
+        last_name: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        phone_number: phoneValue,
+        password: passwordValue,
+        confirm_password: document.getElementById('confirmPassword').value,
+        token: token // Ահա այստեղ ավելացվում է
+    };
+
+    try {
+        const response = await fetch("/api/auth/add-user", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(userData)
+        });
+
+        if (response.ok) {
+            serverMessage.textContent = "Դուք հաջողությամբ գրանցվել եք։ Ստուգեք Ձեր էլ. հասցեն հաստատման համար։";
+            serverMessage.style.color = "green";
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 4000);
+        } else {
+            const errorData = await response.json();
+            serverMessage.textContent = errorData.detail || "Սխալ տեղի ունեցավ։ Խնդրում ենք կրկին փորձել։";
+            serverMessage.style.color = "red";
+        }
+
+    } catch (error) {
+        serverMessage.textContent = "Ցանցի սխալ։ Խնդրում ենք կրկին փորձել։";
+        serverMessage.style.color = "red";
+        console.error(error);
+    }
+});
+</script>
+
+<!--<script>-->
+<!--document.getElementById('registrationForm').addEventListener('submit', async function (e) {-->
+<!--    e.preventDefault();-->
+
+<!--    const serverMessage = document.getElementById('server-message');-->
+<!--    serverMessage.textContent = '';-->
+<!--    serverMessage.style.color = '';-->
+
+<!--    // Հեռախոսի ստուգում-->
+<!--    const phoneInput = document.getElementById('phone');-->
+<!--    const phoneError = document.getElementById('phoneError');-->
+<!--    const phoneValue = phoneInput.value.trim();-->
+
+<!--    phoneError.style.display = 'none';-->
+<!--    phoneError.textContent = '';-->
+
+<!--    const phoneRegex = /^(\+|0)\d{7,15}$/;-->
+<!--    if (phoneValue && !phoneRegex.test(phoneValue)) {-->
+<!--        phoneError.textContent = "Խնդրում ենք մուտքագրել ճիշտ հեռախոսահամար։ Օրինակ՝ +37499123456 կամ 099123456։";-->
+<!--        phoneError.style.display = 'block';-->
+<!--        return;-->
+<!--    }-->
+
+<!--    // Գաղտնաբառի ստուգում-->
+<!--    const passwordInput = document.getElementById('password');-->
+<!--    const passwordError = document.getElementById('passwordError');-->
+<!--    const passwordValue = passwordInput.value.trim();-->
+
+<!--    passwordError.style.display = 'none';-->
+<!--    passwordError.textContent = '';-->
+
+<!--    if (passwordValue.length < 9) {-->
+<!--        passwordError.textContent = "Գաղտնաբառը պետք է պարունակի առնվազն 9 նիշ։";-->
+<!--        passwordError.style.display = 'block';-->
+<!--        return;-->
+<!--    }-->
+
+<!--    // Բոլոր տվյալները-->
+<!--    const userData = {-->
+<!--        first_name: document.getElementById('fullName').value,-->
+<!--        last_name: document.getElementById('username').value,-->
+<!--        email: document.getElementById('email').value,-->
+<!--        phone_number: phoneValue,-->
+<!--        password: passwordValue,-->
+<!--        confirm_password: document.getElementById('confirmPassword').value-->
+<!--    };-->
+
+<!--    try {-->
+<!--        const response = await fetch("/api/auth/add-user", {-->
+<!--            method: "POST",-->
+<!--            headers: {-->
+<!--                "Content-Type": "application/json"-->
+<!--            },-->
+<!--            body: JSON.stringify(userData)-->
+<!--        });-->
+
+<!--        if (response.ok) {-->
+<!--            serverMessage.textContent = "Դուք հաջողությամբ գրանցվել եք։ Ստուգեք Ձեր էլ. հասցեն հաստատման համար։";-->
+<!--            serverMessage.style.color = "green";-->
+<!--            setTimeout(() => {-->
+<!--                window.location.href = "/";-->
+<!--            }, 4000);-->
+<!--        } else {-->
+<!--            const errorData = await response.json();-->
+<!--            serverMessage.textContent = errorData.detail || "Սխալ տեղի ունեցավ։ Խնդրում ենք կրկին փորձել։";-->
+<!--            serverMessage.style.color = "red";-->
+<!--        }-->
+
+<!--    } catch (error) {-->
+<!--        serverMessage.textContent = "Ցանցի սխալ։ Խնդրում ենք կրկին փորձել։";-->
+<!--        serverMessage.style.color = "red";-->
+<!--        console.error(error);-->
+<!--    }-->
+<!--});-->
+<!--</script>-->
+</body>
+</html>

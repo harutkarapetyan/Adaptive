@@ -1,27 +1,18 @@
 from services.service_email import send_email
-import configparser
 
-config = configparser.ConfigParser()
-config.read("./core/config.ini")
-
-SERVER_ADDRESS = config["DEFAULT"]["SERVER_ADDRESS"]
+from core.urls import VERIFICATION_BASE_URL
 
 def mail_body(email):
+    verification_url = f"{VERIFICATION_BASE_URL}?email={email}"
 
-    # URL = f"{SERVER_ADDRESS}/api/auth/mail_verification"
-    verification_url = f"{SERVER_ADDRESS}/api/auth/mail_verification?email={email}"
-
-    return f"""Dear user,
-               Thank you for creating your account.
-               Please confirm your email address. The confirmation address is as follows:
-            \n
-            {verification_url}
-            \n
-              If you have not requested a verification code, you can safely ignore this email․
+    return f"""
+    <p>Հարգելի օգտատեր,</p>
+    <p>Շնորհակալություն ձեր հաշիվը ստեղծելու համար։ Խնդրում ենք հաստատել ձեր էլեկտրոնային փոստի հասցեն։</p>
+    <p><a href="{verification_url}">Սեղմեք այստեղ՝ Ձեր էլ․ հասցեն հաստատելու համար</a></p>
+    <p>Եթե դուք չեք փորձել գրանցվել, ապա կարող եք անվտանգ անտեսել այս էլ. նամակը։</p>
     """
 
-
-subject = "Confirm Registration"
+subject = "Գրանցման հաստատում"
 sender = "adaptiveproject2025@gmail.com"
 password = "whvu qagh hnug ukuz"
 

@@ -8,6 +8,7 @@ class  UserSignUp(BaseModel):
     password: str
     confirm_password: str
     phone_number: str
+    token: str
 
 
 class UserLogin(BaseModel):
@@ -23,3 +24,15 @@ class PasswordReset(BaseModel):
     code: int
     new_password: str
     confirm_password: str
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+class InvitationRequest(BaseModel):
+    email: str
+    name: str
+
+
+class ResetCodeRequest(BaseModel):
+    email: str
+    code: int

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaptive - Личный кабинет</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        /* Шапка */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Основной контент */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Боковая панель */
+        .sidebar {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background-color: #f0f2ff;
+            color: var(--primary);
+        }
+
+        .sidebar-menu i {
+            font-size: 20px;
+        }
+
+        /* Прогресс адаптации */
+        .progress-card {
+            background-color: #f0f2ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .progress-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e3ff;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        /* Основная область */
+        .main-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .welcome-message {
+            margin-bottom: 30px;
+        }
+
+        .welcome-message h1 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        /* Чат-бот */
+        .chatbot-container {
+            border: 1px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 40px;
+        }
+
+        .chatbot-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chatbot-avatar {
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .chatbot-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: #fafbff;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: white;
+            padding: 12px 15px;
+            border-radius: 0 10px 10px 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 10px 0 10px 10px;
+            margin-left: auto;
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid #eee;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+        }
+
+        .chatbot-input button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chatbot-input button:hover {
+            background-color: var(--secondary);
+        }
+
+        /* Быстрые вопросы */
+        .quick-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .quick-question {
+            background-color: #f0f2ff;
+            color: var(--primary);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .quick-question:hover {
+            background-color: #e0e3ff;
+        }
+
+        /* Задачи */
+        .tasks {
+            margin-top: 40px;
+        }
+
+        .tasks h2 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .task-checkbox {
+            margin-right: 15px;
+        }
+
+        /*.task-completed {*/
+        /*    text-decoration: line-through;*/
+        /*    color: var(--gray);*/
+        /*}*/
+
+        /* Completion Message */
+        .completion-message {
+            text-align: center;
+            padding: 20px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<!-- Шапка -->
+<header>
+    <div class="container">
+        <div class="header-content">
+            <a href="/" class="logo">Adaptive</a>
+            <div class="user-menu">
+                <span>Иван Петров</span>
+                <div class="user-avatar">ИП</div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Основной контент -->
+<main class="container">
+    <div class="dashboard">
+        <!-- Боковая панель -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active"><i class="fas fa-home"></i> Գլխավոր</a></li>
+                <li><a href="#"><i class="fas fa-tasks"></i> Իմ առաջադրանքները</a></li>
+                <li><a href="#"><i class="fas fa-book"></i> Գիտելիքների բազա</a></li>
+                <li><a href="#"><i class="fas fa-users"></i> Թիմ</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Կարգավորումներ</a></li>
+            </ul>
+
+            <div class="progress-card">
+                <h3 class="progress-title">Հարմարվելու առաջընթացը</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="progress-text" id="progressText">Դուք ավարտել եք հարմարվելու ծրագրի 0%-ը</p>
+            </div>
+
+        </aside>
+
+        <!-- Основная область -->
+        <div class="main-content">
+            <div class="welcome-message">
+                <h1 id="welcomeTitle">Բարի գալուստ</h1>
+                <p>Այսօր ձեր 1-ին օրն է մեր ընկերությունում։ Եկեք սկսենք ձեր ինտեգրման ուղին։</p>
+            </div>
+
+
+            <!-- Чат-бот -->
+            <div class="chatbot-container">
+                <div class="chatbot-header">
+                    <div class="chatbot-avatar">A</div>
+                    <h3>Adaptive-ի օգնական</h3>
+
+                </div>
+                <div class="chatbot-messages" id="chatMessages">
+                    <div class="message bot-message">
+                        <div id="chatGreeting">
+                        Բարև, ։ Ես քո հարմարվելու օգնականն եմ։ Ահա հարցեր, որոնք կօգնեն քեզ արագ հարմարվել
+                        </div>
+                        <div class="quick-questions" id="mainQuestions">
+                            <button class="quick-question">Ինչով է զբաղվում Adaptive-ը՞</button>
+                            <button class="quick-question">Ո՞վ է ներկայիս տնօրենը։</button>
+                            <button class="quick-question">Ո՞րն է աշխատանքային գրաֆիկը։</button>
+                            <button class="quick-question">Քանի՞ օր տարեկան արձակուրդ է տրամադրվում։</button>
+                            <button class="quick-question">Տրամադրվու՞մ է արդյոք աշխատակիցներին ապահովագրություն։</button>
+                            <button class="quick-question">Քանի՞ աշխատակից է աշխատում Adaptive-ում։</button>
+                            <button class="quick-question">Ի՞նչ ծառայություններ է մատուցում Adaptive-ը։</button>
+                            <button class="quick-question">Արդյո՞ք այժմ արդիական է այս ծառայությունը։</button>
+                            <button class="quick-question">Որքա՞ն հաճախ է վերանայվում աշխատավարձը։</button>
+                            <button class="quick-question">Ի՞նչ ներքին կանոններ և մշակույթ ունի Adaptive-ը։</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="completion-message" id="completionMessage">
+                    <h3><i class="fas fa-check-circle"></i> Շնորհավորում ենք։ Դուք ավարտել եք հարմարվելու բոլոր հարցերը։</h3>
+                </div>
+            </div>
+
+            <!-- Задачи -->
+            <div class="tasks">
+                <h2><i class="fas fa-tasks"></i>Մոտակա առաջադրանքներ</h2>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <input type="checkbox" class="task-checkbox">
+                        <span>Ծանոթանալ թիմի հետ</span>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" class="task-checkbox" checked>
+                        <span class="task-completed">Լրացնել աշխատակցի հարցաթերթիկը</span>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" class="task-checkbox">
+                        <span>Ուղեկցել անվտանգության տեխնիկայի ուսուցմանն</span>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" class="task-checkbox">
+                        <span>Գրանցվել կորպորատիվ փոստում</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Օգտագործողի տվյալների բեռնում localStorage-ից
+    function loadUserInfo() {
+        const firstName = localStorage.getItem('firstName') || 'Օգտատեր';
+        const lastName = localStorage.getItem('lastName') || '';
+        const fullName = `${firstName} ${lastName}`.trim();
+        const initials = `${firstName[0] || ''}${lastName[0] || ''}`.toUpperCase();
+
+        // Օգտագործողի անունը վերևի մենյուում
+        const userNameSpan = document.querySelector('.user-menu span');
+        if (userNameSpan) {
+            userNameSpan.textContent = fullName;
+        }
+
+        // Օգտագործողի ավատար
+        const userAvatarDiv = document.querySelector('.user-avatar');
+        if (userAvatarDiv) {
+            userAvatarDiv.textContent = initials;
+        }
+
+        // Welcome բաժնում Բարի գալուստ տեքստ
+        const welcomeTitle = document.getElementById('welcomeTitle');
+        if (welcomeTitle) {
+            welcomeTitle.textContent = `Բարի գալուստ, ${firstName}։`;
+        }
+
+        // Չատբոթի ողջույնի հաղորդագրություն
+        const chatGreeting = document.getElementById('chatGreeting');
+        if (chatGreeting) {
+            chatGreeting.innerHTML = `Բարև, ${firstName}։ Ես քո հարմարվելու օգնականն եմ։ Ահա հարցեր, որոնք կօգնեն քեզ արագ հարմարվել`;
+        }
+    }
+
+    // Չատբոթի հարցեր և պատասխաններ
+    const qaPairs = {
+        "Ինչով է զբաղվում Adaptive-ը՞": "Adaptive-ը նոր աշխատակիցների ադապտացիոն գործընթացի կազմակերպման և օպտիմալացման համակարգ է։ Մեր նպատակը նոր ընդունված աշխատակիցներին արագ ու արդյունավետ ծանոթացնելն է կազմակերպության կառուցվածքին, մշակույթին, գործելաոճին և թիմին։",
+        "Ո՞վ է ներկայիս տնօրենը։": "Ներկայիս տնօրենը Հարություն Կարապետյանն է։ Նա ընտրվել է ընդհանուր հանձնաժողովի կողմից՝ 2025 թվականի ապրիլի 21-ին։",
+        "Ո՞րն է աշխատանքային գրաֆիկը։": "Աշխատանքային օրեր՝ երկուշաբթիից ուրբաթ, Ժամեր՝ 09:00 - 18:00։",
+        "Քանի՞ օր տարեկան արձակուրդ է տրամադրվում։": "Տարեկան տրամադրվում է 20 աշխատանքային օր վճարովի արձակուրդ։",
+        "Տրամադրվու՞մ է արդյոք աշխատակիցներին ապահովագրություն։": "Այո՛, տրամադրվում է առողջապահական ապահովագրություն։",
+        "Քանի՞ աշխատակից է աշխատում Adaptive-ում։": "Ներկայումս մոտ 250 աշխատակից։",
+        "Ի՞նչ ծառայություններ է մատուցում Adaptive-ը։": "Օնբորդինգ պլաններ, ուսումնական նյութեր, առաջադրանքների կառավարում, թիմային կապ։",
+        "Արդյո՞ք այժմ արդիական է այս ծառայությունը։": "Այո՛, ժամանակակից կազմակերպություններում սա կարևոր պահանջ է։",
+        "Որքա՞ն հաճախ է վերանայվում աշխատավարձը։": "Տարեկան երկու անգամ և ըստ անհատական արդյունքների։",
+        "Ի՞նչ ներքին կանոններ և մշակույթ ունի Adaptive-ը։": "Համերաշխություն, նորարարություն, թափանցիկ հաղորդակցություն, թիմային համագործակցություն։"
+    };
+
+    // DOM տարրեր
+    const chatMessages = document.getElementById('chatMessages');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const completionMessage = document.getElementById('completionMessage');
+    const mainQuestions = document.getElementById('mainQuestions');
+
+    const answeredQuestions = new Set();
+    const totalQuestions = Object.keys(qaPairs).length;
+
+    // Չատի ինիցիալիզացիա
+    function initChat() {
+        mainQuestions.querySelectorAll('.quick-question').forEach(button => {
+            button.addEventListener('click', function() {
+                const question = this.textContent;
+                showQuestionAnswer(question);
+            });
+        });
+
+        updateProgress();
+    }
+
+    // Պատասխանել հարցին
+    function showQuestionAnswer(question) {
+        if (answeredQuestions.has(question)) return;
+
+        addMessage(question, 'user');
+
+        setTimeout(() => {
+            addMessage(qaPairs[question], 'bot');
+            answeredQuestions.add(question);
+            updateProgress();
+
+            if (answeredQuestions.size === totalQuestions) {
+                showCompletionMessage();
+            }
+        }, 500);
+    }
+
+    // Ավելացնել հաղորդագրություն
+    function addMessage(text, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}-message`;
+        messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Թարմացնել հարմարվելու առաջընթացը
+    function updateProgress() {
+        const percent = Math.round((answeredQuestions.size / totalQuestions) * 100);
+        progressFill.style.width = `${percent}%`;
+        progressText.textContent = `Դուք ավարտել եք ${percent}% հարմարվելու ծրագրից`;
+    }
+
+    // Ցուցադրել ավարտման հաղորդագրությունը
+    function showCompletionMessage() {
+        setTimeout(() => {
+            completionMessage.style.display = 'block';
+            progressFill.style.backgroundColor = '#4caf50';
+        }, 1000);
+    }
+
+    // Էջի ամբողջական բեռնում
+    window.onload = function() {
+        initChat();
+        loadUserInfo();
+    };
+</script>
+</body>
+</html>

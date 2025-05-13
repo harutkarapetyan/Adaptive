@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaptive - Password Reset</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --success: #4cc9f0;
+            --danger: #e63946;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .reset-section .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Reset Card */
+        .reset-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            padding: 40px 0;
+        }
+
+        .reset-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        .reset-card h2 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .reset-card p {
+            color: var(--gray);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Steps */
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ddd;
+        }
+
+        .step-dot.active {
+            background-color: var(--primary);
+        }
+
+        /* Code Input */
+        .code-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .code-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        /* Error Message */
+        .error-message {
+            color: var(--danger);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="container">
+        <nav>
+            <a href="/" class="logo">Adaptive</a>
+        </nav>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main>
+    <section class="reset-section">
+        <div class="container">
+            <div class="reset-card">
+                <!-- Step Indicator -->
+                <div class="step-indicator">
+                    <div class="step-dot active" id="step1Dot"></div>
+                    <div class="step-dot" id="step2Dot"></div>
+                    <div class="step-dot" id="step3Dot"></div>
+                </div>
+
+                <!-- Step 1: Enter Email -->
+                <div class="step active" id="step1">
+                    <h2>Մոռացե՞լ եք գաղտնաբառը։</h2>
+                    <p>Մուտքագրեք ձեր էլ․ հասցեն՝ հաստատման կոդ ստանալու համար։</p>
+
+                    <form id="emailForm">
+                        <div class="form-group">
+                            <label for="email">Էլ. հասցե</label>
+                            <input type="email" id="email" placeholder="@email.com" required>
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Ուղարկել կոդը</button>
+                        <div id="resendMessage" style="margin-top: 10px; font-weight: bold; display: none;"></div>
+                    </form>
+
+                    <a href="/" class="back-link">Վերադառնալ գլխավոր էջ</a>
+                </div>
+
+                <!-- Step 2: Enter Code -->
+                <div class="step" id="step2">
+                    <h2>Հաստատեք ձեր էլ․ հասցեն</h2>
+                    <p>Մենք ուղարկել ենք 6-նիշանոց կոդ <span id="userEmail"></span></p>
+
+                    <form id="codeForm">
+                        <div class="form-group">
+                            <label>Հաստատման կոդ</label>
+                            <div class="code-container">
+                                <input type="text" class="code-input" maxlength="1" required>
+                                <input type="text" class="code-input" maxlength="1" required>
+                                <input type="text" class="code-input" maxlength="1" required>
+                                <input type="text" class="code-input" maxlength="1" required>
+                                <input type="text" class="code-input" maxlength="1" required>
+                                <input type="text" class="code-input" maxlength="1" required>
+                            </div>
+                            <div class="error-message" id="codeError"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Հաստատել կոդը</button>
+                    </form>
+
+                    <a href="#" class="back-link" id="resendCode">Կրկին ուղարկել կոդը</a>
+                </div>
+
+                <!-- Step 3: New Password -->
+                <div class="step" id="step3">
+                    <h2>Ստեղծել նոր գաղտնաբառ</h2>
+                    <p>Ձեր գաղտնաբառը պետք է կազմված լինի առնվազն 8 նիշից։</p>
+
+                    <form id="passwordForm">
+                        <div class="form-group">
+                            <label for="newPassword">Նոր գաղտնաբառ</label>
+                            <input type="password" id="newPassword" required minlength="8">
+                            <div class="error-message" id="passwordError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Հաստատել գաղտնաբառը</label>
+                            <input type="password" id="confirmPassword" required minlength="8">
+                            <div class="error-message" id="confirmError"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Վերականգնել գաղտնաբառը</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p>© 2025 Adaptive։ Բոլոր իրավունքները պաշտպանված են։</p>
+    </div>
+</footer>
+
+<!-- JavaScript -->
+<script>
+    // DOM Elements
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+    const step1Dot = document.getElementById('step1Dot');
+    const step2Dot = document.getElementById('step2Dot');
+    const step3Dot = document.getElementById('step3Dot');
+    const userEmail = document.getElementById('userEmail');
+    const resendCode = document.getElementById('resendCode');
+
+    const emailForm = document.getElementById('emailForm');
+    const codeForm = document.getElementById('codeForm');
+    const passwordForm = document.getElementById('passwordForm');
+
+    const codeInputs = document.querySelectorAll('.code-input');
+
+    let userEmailValue = '';
+
+    // Helper Functions
+    function validateEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function moveToNextInput() {
+        codeInputs.forEach((input, index) => {
+            input.addEventListener('input', () => {
+                if (input.value.length === 1 && index < codeInputs.length - 1) {
+                    codeInputs[index + 1].focus();
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && input.value.length === 0 && index > 0) {
+                    codeInputs[index - 1].focus();
+                }
+            });
+        });
+    }
+
+    moveToNextInput();
+
+    // Step 1: Send Code
+    emailForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+
+        if (!validateEmail(email)) {
+            document.getElementById('emailError').textContent = 'Խնդրում ենք մուտքագրել վավեր էլ․ հասցե։';
+            document.getElementById('emailError').style.display = 'block';
+            return;
+        }
+
+        document.getElementById('emailError').style.display = 'none';
+
+        try {
+            const response = await fetch("/api/password_reset/request", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email: email })
+            });
+
+            if (response.ok) {
+                userEmailValue = email;
+                userEmail.textContent = email;
+                step1.classList.remove('active');
+                step2.classList.add('active');
+                step1Dot.classList.remove('active');
+                step2Dot.classList.add('active');
+                codeInputs[0].focus();
+            } else {
+                const data = await response.json();
+                document.getElementById('emailError').textContent = data.detail || 'Սխալ։ Խնդրում ենք կրկին փորձել։';
+                document.getElementById('emailError').style.display = 'block';
+            }
+        } catch (error) {
+            console.error(error);
+            document.getElementById('emailError').textContent = 'Ցանցային սխալ։ Խնդրում ենք ավելի ուշ փորձել։';
+            document.getElementById('emailError').style.display = 'block';
+        }
+    });
+
+    // Step 2: Verify Code
+    codeForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const enteredCode = Array.from(codeInputs).map(input => input.value).join('');
+
+        if (enteredCode.length !== 6) {
+            document.getElementById('codeError').textContent = 'Խնդրում ենք լրացնել ամբողջ 6 նիշանոց կոդը։';
+            document.getElementById('codeError').style.display = 'block';
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/password_reset/verify-reset-code", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: userEmailValue,
+                    code: parseInt(enteredCode)
+                })
+            });
+
+            if (response.ok) {
+                document.getElementById('codeError').style.display = 'none';
+                step2.classList.remove('active');
+                step3.classList.add('active');
+                step2Dot.classList.remove('active');
+                step3Dot.classList.add('active');
+            } else {
+                const data = await response.json();
+                document.getElementById('codeError').textContent = data.detail || 'Սխալ կոդ։ Խնդրում ենք կրկին փորձել։';
+                document.getElementById('codeError').style.display = 'block';
+            }
+        } catch (error) {
+            console.error(error);
+            document.getElementById('codeError').textContent = 'Ցանցային սխալ։ Խնդրում ենք կրկին փորձել։';
+            document.getElementById('codeError').style.display = 'block';
+        }
+    });
+
+    // Step 3: Reset Password (includes code in request ✅)
+    passwordForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const newPassword = document.getElementById('newPassword').value.trim();
+        const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+        if (newPassword.length < 8) {
+            document.getElementById('passwordError').textContent = 'Գաղտնաբառը պետք է լինի առնվազն 8 նիշ։';
+            document.getElementById('passwordError').style.display = 'block';
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            document.getElementById('confirmError').textContent = 'Գաղտնաբառերը չեն համընկնում։';
+            document.getElementById('confirmError').style.display = 'block';
+            return;
+        }
+
+        try {
+            const enteredCode = Array.from(codeInputs).map(input => input.value).join('');
+
+            const response = await fetch("/api/password_reset/reset-password", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: userEmailValue,
+                    code: parseInt(enteredCode),
+                    new_password: newPassword,
+                    confirm_password: confirmPassword
+                })
+            });
+
+            if (response.ok) {
+                window.location.href = '/';
+            } else {
+                const data = await response.json();
+                document.getElementById('passwordError').textContent = data.detail || 'Սխալ։';
+                document.getElementById('passwordError').style.display = 'block';
+            }
+        } catch (error) {
+            console.error(error);
+            document.getElementById('passwordError').textContent = 'Ցանցային սխալ։ Խնդրում ենք կրկին փորձել։';
+            document.getElementById('passwordError').style.display = 'block';
+        }
+    });
+
+    // Resend Code
+    resendCode.addEventListener('click', async function (e) {
+        e.preventDefault();
+        const resendMessage = document.getElementById('resendMessage');
+        resendMessage.style.display = 'none';
+
+        try {
+            const response = await fetch("/api/password_reset/request", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email: userEmailValue })
+            });
+
+            if (response.ok) {
+                resendMessage.textContent = 'Նոր կոդը հաջողությամբ ուղարկվեց 📩';
+                resendMessage.style.color = 'green';
+            } else {
+                const data = await response.json();
+                resendMessage.textContent = data.detail || 'Սխալ։ Կոդի ուղարկումը չհաջողվեց։';
+                resendMessage.style.color = 'red';
+            }
+        } catch (error) {
+            console.error(error);
+            resendMessage.textContent = 'Ցանցային սխալ։ Խնդրում ենք ավելի ուշ փորձել։';
+            resendMessage.style.color = 'red';
+        }
+
+        resendMessage.style.display = 'block';
+    });
+</script>
+
+<!--<script>-->
+<!--    // DOM Elements-->
+<!--    const step1 = document.getElementById('step1');-->
+<!--    const step2 = document.getElementById('step2');-->
+<!--    const step3 = document.getElementById('step3');-->
+<!--    const step1Dot = document.getElementById('step1Dot');-->
+<!--    const step2Dot = document.getElementById('step2Dot');-->
+<!--    const step3Dot = document.getElementById('step3Dot');-->
+<!--    const userEmail = document.getElementById('userEmail');-->
+<!--    const resendCode = document.getElementById('resendCode');-->
+
+<!--    const emailForm = document.getElementById('emailForm');-->
+<!--    const codeForm = document.getElementById('codeForm');-->
+<!--    const passwordForm = document.getElementById('passwordForm');-->
+
+<!--    const codeInputs = document.querySelectorAll('.code-input');-->
+
+<!--    let userEmailValue = '';-->
+
+<!--    // Helper Functions-->
+<!--    function validateEmail(email) {-->
+<!--        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);-->
+<!--    }-->
+
+<!--    function moveToNextInput() {-->
+<!--        codeInputs.forEach((input, index) => {-->
+<!--            input.addEventListener('input', () => {-->
+<!--                if (input.value.length === 1 && index < codeInputs.length - 1) {-->
+<!--                    codeInputs[index + 1].focus();-->
+<!--                }-->
+<!--            });-->
+<!--            input.addEventListener('keydown', (e) => {-->
+<!--                if (e.key === 'Backspace' && input.value.length === 0 && index > 0) {-->
+<!--                    codeInputs[index - 1].focus();-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    }-->
+
+<!--    moveToNextInput();-->
+
+<!--    // Step 1: Send Code-->
+<!--    emailForm.addEventListener('submit', async function (e) {-->
+<!--        e.preventDefault();-->
+<!--        const email = document.getElementById('email').value.trim();-->
+
+<!--        if (!validateEmail(email)) {-->
+<!--            document.getElementById('emailError').textContent = 'Խնդրում ենք մուտքագրել վավեր էլ․ հասցե։';-->
+<!--            document.getElementById('emailError').style.display = 'block';-->
+<!--            return;-->
+<!--        }-->
+
+<!--        document.getElementById('emailError').style.display = 'none';-->
+
+<!--        try {-->
+<!--            const response = await fetch("/api/password_reset/request", {-->
+<!--                method: "POST",-->
+<!--                headers: {-->
+<!--                    "Content-Type": "application/json"-->
+<!--                },-->
+<!--                body: JSON.stringify({ email: email })-->
+<!--            });-->
+
+<!--            if (response.ok) {-->
+<!--                userEmailValue = email;-->
+<!--                userEmail.textContent = email;-->
+<!--                step1.classList.remove('active');-->
+<!--                step2.classList.add('active');-->
+<!--                step1Dot.classList.remove('active');-->
+<!--                step2Dot.classList.add('active');-->
+<!--                codeInputs[0].focus();-->
+<!--            } else {-->
+<!--                const data = await response.json();-->
+<!--                document.getElementById('emailError').textContent = data.detail || 'Սխալ։ Խնդրում ենք կրկին փորձել։';-->
+<!--                document.getElementById('emailError').style.display = 'block';-->
+<!--            }-->
+<!--        } catch (error) {-->
+<!--            console.error(error);-->
+<!--            document.getElementById('emailError').textContent = 'Ցանցային սխալ։ Խնդրում ենք ավելի ուշ փորձել։';-->
+<!--            document.getElementById('emailError').style.display = 'block';-->
+<!--        }-->
+<!--    });-->
+
+<!--    // Step 2: Verify Code-->
+<!--    codeForm.addEventListener('submit', async function (e) {-->
+<!--        e.preventDefault();-->
+<!--        const enteredCode = Array.from(codeInputs).map(input => input.value).join('');-->
+
+<!--        if (enteredCode.length !== 6) {-->
+<!--            document.getElementById('codeError').textContent = 'Խնդրում ենք լրացնել ամբողջ 6 նիշանոց կոդը։';-->
+<!--            document.getElementById('codeError').style.display = 'block';-->
+<!--            return;-->
+<!--        }-->
+
+<!--        try {-->
+<!--            const response = await fetch("/api/password_reset/verify-reset-code", {-->
+<!--                method: "POST",-->
+<!--                headers: {-->
+<!--                    "Content-Type": "application/json"-->
+<!--                },-->
+<!--                body: JSON.stringify({-->
+<!--                    email: userEmailValue,-->
+<!--                    code: parseInt(enteredCode)-->
+<!--                })-->
+<!--            });-->
+
+<!--            if (response.ok) {-->
+<!--                document.getElementById('codeError').style.display = 'none';-->
+<!--                step2.classList.remove('active');-->
+<!--                step3.classList.add('active');-->
+<!--                step2Dot.classList.remove('active');-->
+<!--                step3Dot.classList.add('active');-->
+<!--            } else {-->
+<!--                const data = await response.json();-->
+<!--                document.getElementById('codeError').textContent = data.detail || 'Սխալ կոդ։ Խնդրում ենք կրկին փորձել։';-->
+<!--                document.getElementById('codeError').style.display = 'block';-->
+<!--            }-->
+<!--        } catch (error) {-->
+<!--            console.error(error);-->
+<!--            document.getElementById('codeError').textContent = 'Ցանցային սխալ։ Խնդրում ենք կրկին փորձել։';-->
+<!--            document.getElementById('codeError').style.display = 'block';-->
+<!--        }-->
+<!--    });-->
+
+<!--    // Step 3: Reset Password-->
+<!--    passwordForm.addEventListener('submit', async function (e) {-->
+<!--        e.preventDefault();-->
+<!--        const newPassword = document.getElementById('newPassword').value.trim();-->
+<!--        const confirmPassword = document.getElementById('confirmPassword').value.trim();-->
+
+<!--        if (newPassword.length < 8) {-->
+<!--            document.getElementById('passwordError').textContent = 'Գաղտնաբառը պետք է լինի առնվազն 8 նիշ։';-->
+<!--            document.getElementById('passwordError').style.display = 'block';-->
+<!--            return;-->
+<!--        }-->
+
+<!--        if (newPassword !== confirmPassword) {-->
+<!--            document.getElementById('confirmError').textContent = 'Գաղտնաբառերը չեն համընկնում։';-->
+<!--            document.getElementById('confirmError').style.display = 'block';-->
+<!--            return;-->
+<!--        }-->
+
+<!--        try {-->
+<!--            const enteredCode = Array.from(codeInputs).map(input => input.value).join('');-->
+
+<!--            const response = await fetch("/api/password_reset/reset-password", {-->
+<!--                method: "POST",-->
+<!--                headers: {-->
+<!--                    "Content-Type": "application/json",-->
+<!--                },-->
+<!--                body: JSON.stringify({-->
+<!--                    email: userEmailValue,-->
+<!--                    new_password: newPassword,-->
+<!--                    confirm_password: confirmPassword-->
+<!--                })-->
+<!--            });-->
+
+<!--            if (response.ok) {-->
+<!--                window.location.href = '/'; // Redirect to login page or homepage-->
+<!--            } else {-->
+<!--                const data = await response.json();-->
+<!--                document.getElementById('passwordError').textContent = data.detail || 'Սխալ։';-->
+<!--                document.getElementById('passwordError').style.display = 'block';-->
+<!--            }-->
+<!--        } catch (error) {-->
+<!--            console.error(error);-->
+<!--            document.getElementById('passwordError').textContent = 'Ցանցային սխալ։ Խնդրում ենք կրկին փորձել։';-->
+<!--            document.getElementById('passwordError').style.display = 'block';-->
+<!--        }-->
+<!--    });-->
+
+<!--    // Resend Code-->
+<!--    resendCode.addEventListener('click', async function (e) {-->
+<!--        e.preventDefault();-->
+<!--        const resendMessage = document.getElementById('resendMessage');-->
+<!--        resendMessage.style.display = 'none';-->
+
+<!--        try {-->
+<!--            const response = await fetch("/api/password_reset/request", {-->
+<!--                method: "POST",-->
+<!--                headers: {-->
+<!--                    "Content-Type": "application/json"-->
+<!--                },-->
+<!--                body: JSON.stringify({ email: userEmailValue })-->
+<!--            });-->
+
+<!--            if (response.ok) {-->
+<!--                resendMessage.textContent = 'Նոր կոդը հաջողությամբ ուղարկվեց 📩';-->
+<!--                resendMessage.style.color = 'green';-->
+<!--            } else {-->
+<!--                const data = await response.json();-->
+<!--                resendMessage.textContent = data.detail || 'Սխալ։ Կոդի ուղարկումը չհաջողվեց։';-->
+<!--                resendMessage.style.color = 'red';-->
+<!--            }-->
+<!--        } catch (error) {-->
+<!--            console.error(error);-->
+<!--            resendMessage.textContent = 'Ցանցային սխալ։ Խնդրում ենք ավելի ուշ փորձել։';-->
+<!--            resendMessage.style.color = 'red';-->
+<!--        }-->
+
+<!--        resendMessage.style.display = 'block';-->
+<!--    });-->
+
+<!--</script>-->
+</body>
+</html>
