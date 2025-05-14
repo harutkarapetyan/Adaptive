@@ -6,7 +6,6 @@ from core import  security
 from models.models import User, InvitationToken
 from sqlalchemy.orm import  Session
 from fastapi.responses import JSONResponse
-import configparser
 from datetime import datetime, timedelta
 import uuid
 from core.urls import INVITATION_BASE_URL
@@ -30,7 +29,6 @@ def mail_invitation(name, invitation_url):
 
     <a href="{invitation_url}">{invitation_url}</a>
 
-
     Խնդրում ենք նկատի ունենալ, որ հղումը վավեր է 24 ժամ և կարող է օգտագործվել միայն մեկ անգամ։
     Շնորհակալություն։
     Մենք անհամբեր սպասում ենք ձեզ տեսնել մեր թիմում։
@@ -45,39 +43,6 @@ subject = "Հրավեր՝ միանալու Adaptive-ին"
 sender = "adaptiveproject2025@gmail.com"
 password = "whvu qagh hnug ukuz"
 
-
-
-# @admin_router.post("/mail_invitation_email")
-# def mail_invitation_email(data: InvitationRequest, db: Session = Depends(get_db)):
-#     # Սկզբում ստուգում ենք գոյություն ունեցող հրավերը
-#     existing_invitation = db.query(InvitationToken).filter(InvitationToken.email == data.email).first()
-#
-#     if existing_invitation:
-#         # Եթե հրավերը ակտիվ է (չի օգտագործվել և ժամկետը չի լրացել), ապա արգելում ենք
-#         if not existing_invitation.is_used and existing_invitation.expires_at > datetime.utcnow():
-#             raise HTTPException(status_code=400, detail="Այս էլ․ հասցեի համար արդեն ուղարկվել է հրավերի հղում։")
-#         else:
-#             # Եթե հրավերը օգտագործված է կամ ժամկետը լրացել է, ջնջում ենք հին հրավերը
-#             db.delete(existing_invitation)
-#             db.commit()
-#
-#     # Ստեղծում ենք նոր հրավեր
-#     new_token = InvitationToken(
-#         token=str(uuid.uuid4()),
-#         email=data.email,
-#         expires_at=datetime.utcnow() + timedelta(hours=24)
-#     )
-#     db.add(new_token)
-#     db.commit()
-#     db.refresh(new_token)
-#
-#     # Ուղարկում ենք նամակ
-#     invitation_url = f"http://127.0.0.1:9000/signup?token={new_token.token}"
-#     send_email(subject, mail_invitation(data.name, invitation_url), sender, data.email, password)
-#
-#     return JSONResponse(status_code=status.HTTP_200_OK,
-#                         content={"message": "Message sent successfully."},
-#                         headers=headers)
 
 @admin_router.post("/mail_invitation_email")
 def mail_invitation_email(data: InvitationRequest, db: Session = Depends(get_db)):

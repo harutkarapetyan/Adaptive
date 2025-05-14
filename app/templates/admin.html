@@ -210,7 +210,7 @@
                 <input type="text" id="inviteName" placeholder="Մուտքագրեք օգտատիրոջ անունը">
                 </div>
             <div class="control-group">
-                <label for="inviteEmail">Օգտագործողների կառավարման վահանակ</label>
+                <label for="inviteEmail">Էլ․ փոստի հասցե</label>
                 <input type="email" id="inviteEmail" placeholder="Մուտքագրեք օգտատիրոջ էլ. փոստը">
                 <button class="btn btn-primary" id="inviteBtn" style="margin-top: 10px;">Ուղարկել հրավեր</button>
                 <div id="inviteMessage" style="margin-top: 8px; font-weight: bold; display: none;"></div>
@@ -249,7 +249,10 @@
                     <th>Ազգանուն</th>
                     <th>Էլ. փոստ</th>
                     <th>Հեռախոս</th>
-                    <th></th>Կարգավիճակ</th>
+                    <th>Կարգավիճակ</th>
+                    <th>Դեր</th>
+
+
 
                 </tr>
                 </thead>
@@ -336,8 +339,7 @@
     }
 
     try {
-        const response = await fetch(`/api/auth/delete-user/${userId}`, {  // ✅ Ուղղված է այստեղ
-            method: "DELETE",
+        const response = await fetch(`/api/auth/delete-user/${userId}`, {
         });
 
         if (response.ok) {
@@ -387,7 +389,7 @@
                 lastName: user.last_name,
                 email: user.email,
                 phone: user.phone_number,
-                status: user.status ? 'active' : 'inactive'
+                status: user.status ? 'active' : 'inactive',
             }]);
 
             searchMessage.textContent = 'Օգտատերը գտնվեց։';
@@ -458,6 +460,7 @@ function renderUsersTable(users) {
             <td class="${user.status ? 'status-active' : 'status-inactive'}">
                 ${user.status ? 'ACTIVE' : 'INACTIVE'}
             </td>
+            <td>${user.role}</td>
         </tr>
     `).join('');
 }
